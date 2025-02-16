@@ -12,4 +12,10 @@ def draw():
     screen.clear()
     apple.draw()
 
+def place_apple():
+    apple.x = 400
+    apple.y = 270
+
+place_apple()
+
 pgzrun.go()

@@ -36,6 +36,7 @@ def set_apple_normal():
 
 def set_apple_cut():
     apple.image = "apple_cut.png"
+    sounds.eep.play()
     clock.schedule_unique(set_apple_normal, 0.2)
     clock.schedule_unique(place_apple, 0.2)
 
@@ -73,6 +74,8 @@ def lose_life():
         result_text = "Game over!"
 
 # Program starts here
+WIDTH = 800
+HEIGHT = 600
 score = 0
 life = 3
 result_text = "Shoot the apple!"

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Bank Account</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        .card { max-width: 500px; padding: 1.5rem; border: 1px solid #ddd; border-radius: 10px; }
+        label { display: block; margin: 0.75rem 0 0.25rem; }
+        input { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 5px; }
+        button { margin-top: 1rem; padding: 0.75rem 1.25rem; background: #007ACC; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #005a9e; }
+        .errorlist { color: #b00020; margin: 0.25rem 0 0; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Create Bank Account</h1>
+        <p>Enter your name and initial deposit to start using the web-based account dashboard.</p>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div>
+                {{ form.name.label_tag }}
+                {{ form.name }}
+                {{ form.name.errors }}
+            </div>
+            <div>
+                {{ form.initial_deposit.label_tag }}
+                {{ form.initial_deposit }}
+                {{ form.initial_deposit.errors }}
+            </div>
+            <button type="submit">Create Account</button>
+        </form>
+    </div>
+</body>
+</html>

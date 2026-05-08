@@ -1,6 +1,9 @@
+import os
+import signal
+import threading
 from decimal import Decimal
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse
 from .forms import AccountSetupForm, AmountForm
 from .utils import BankAccount
 
@@ -99,7 +102,14 @@ def account_action(request):
             })
     elif action == 'quit':
         request.session.flush()
-        return redirect('bank:account_setup')
+        # Schedule server shutdown immediately
+        threading.Timer(0.5, lambda: os.kill(os.getpid(), signal.SIGTERM)).start()
+        return HttpResponse(
+            '<html><body style="font-family: Arial; margin: 2rem;">'
+            '<h1>Goodbye!</h1>'
+            '<p>Your session has ended and the server is shutting down.</p>'
+            '</body></html>'
+        )
     else:
         message = 'Unknown action. Please try again.'
 

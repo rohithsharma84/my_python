@@ -1,5 +1,7 @@
 """
 Use Beautiful Soup for web scraping
+Pre-req: python -m pip install bs4
+
 """
 import os
 import bs4 # Beautiful Soup 4

@@ -1,0 +1,13 @@
+Playing around with Django to see what's it about
+
+Instructions:
+------------- 
+python -m pip install virtualenvwrapper-win
+mkvirtualenv myproject
+workon myproject
+python -m pip install django
+mkdir test-django
+cd test-django
+django-admin startproject mywebsite
+cd mywebsite
+mkvirtualenv myproject

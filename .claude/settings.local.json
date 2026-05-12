@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:python-ember-mug.readthedocs.io)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:sopelj.github.io)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(python main.py)"
+    ]
+  }
+}

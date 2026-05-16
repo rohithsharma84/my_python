@@ -223,10 +223,12 @@ class FullWindow(QMainWindow):
         self._tgt_row = _StatusRow("Target Temp")
         self._tgt_minus = QPushButton("−")
         self._tgt_minus.setFixedWidth(28)
+        self._tgt_minus.setStyleSheet("padding: 2px 0px;")
         self._tgt_label = QLabel("—")
         self._tgt_label.setStyleSheet("font-size: 14px; font-weight: bold; padding: 0 6px;")
         self._tgt_plus = QPushButton("+")
         self._tgt_plus.setFixedWidth(28)
+        self._tgt_plus.setStyleSheet("padding: 2px 0px;")
         tgt_widget = QWidget()
         th = QHBoxLayout(tgt_widget)
         th.setContentsMargins(0, 0, 0, 0)
@@ -424,9 +426,10 @@ class FullWindow(QMainWindow):
 
         # Liquid level
         level = data.liquid_level if data.liquid_level is not None else 0
-        level_px = ic.liquid_level_icon(28, float(level))
+        level_pct = level / 30 * 100
+        level_px = ic.liquid_level_icon(28, level_pct)
         self._level_row.set_icon(level_px)
-        self._level_row.set_value_text(f"{int(level)}%")
+        self._level_row.set_value_text(f"{int(level_pct)}%")
 
         # Device info
         self._dev_name_lbl.setText(data.name or "EMBER")

@@ -262,8 +262,9 @@ class ToolbarWindow(QWidget):
 
         # Liquid level
         level = data.liquid_level if data.liquid_level is not None else 0
-        self._level_icon.set_icon(ic.liquid_level_icon(_ICON_SIZE, float(level)))
-        self._level_label.setText(f"{int(level)}%")
+        level_pct = level / 30 * 100
+        self._level_icon.set_icon(ic.liquid_level_icon(_ICON_SIZE, level_pct))
+        self._level_label.setText(f"{int(level_pct)}%")
 
     def _adjust_target(self, delta: int):
         unit = self._settings.temp_unit

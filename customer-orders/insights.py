@@ -2,7 +2,7 @@
 This program is meant to demonstrate how to use Python's various data structures like lists, dictionaries, 
 and sets to analyze customer orders data. 
 
-SECTION 1: Store customer orders
+TASK 1: Store customer orders
 It will first create a list of customers called customers[].
 Next, each customer's order will be saved in a list called orders[], where each order will be a tuple in the list.
 This tuple will contain the following information about the order: customer name, product, price, and category.
@@ -48,7 +48,7 @@ orders = [
     ("Judy",    "Sunglasses",   35, "Accessories"),
 ]
 
-# Create a dictionary to store customer orders
+# Create a dictionary where keys are customer names and values are lists of ordered products
 cust_orders = {}
 # Loop through each order
 for order in orders:
@@ -59,16 +59,16 @@ for order in orders:
     if customer_name not in cust_orders:
         cust_orders[customer_name] = []
     
-    # Append the product to the customer's list of orders
-    cust_orders[customer_name].append(product)
+    cust_orders[customer_name].append(product) # Append the product to customer's list of orders
+    cust_orders[customer_name].sort()  # Sort the list of products for each customer
 
 # Print the customer orders dictionary
-print("Customer Orders:")
+print("Customer names and ordered list of products ordered:")
 for customer, products in cust_orders.items():
     print(f"- {customer}: {products}")
 print("\n")
 
-"""SECTION 2: Classify products by category
+"""TASK 2: Classify products by category
 The program will then create a dictionary called product_category{} which will have the category as key and a values as
 lists of ordered products.
 It will then display all available product categories.
@@ -90,12 +90,12 @@ for order in orders:
         product_category[category].append(product)
 
 # Print the category products dictionary
-print("Product Categories:")
+print("Displaying all available product categories:")
 for category, products in product_category.items():
     print(f"- {category}: {products}")
 print("\n")
 
-"""SECTION 3: Analyze customer orders
+"""TASK 3: Analyze customer orders
 Classify each customer as "High-value buyer" if the total amount spent is above $100.
 If total amount is between $50 and $100, then classify as "Moderate buyer".
 If total is below $50, classify as "Low-value buyer".
@@ -127,7 +127,7 @@ print(f"- Low-value buyers: {', '.join([customer for customer, classification in
 print("\n")
 
 """
-SECTION 4: Generate business insights
+TASK 4: Generate business insights
 The program will create a dictionary called category_sales{} which will have the category as key and total sales 
 amount as value.
 Then it will extract unique products from all orders using sets and display them.
@@ -180,21 +180,21 @@ print("Top 3 highest spending customers:\n- " + "\n- ".join([f"{customer}: ${tot
 print("\n")
 
 """
-SECTION 5: Organize and display data
+TASK 5: Organize and display data
 Print a summary of each customer's total spending and classification.
 Demonstrate how to find customers who purchased from multiple categories using sets.
 Finally, print list of customers who purchased from both electronics and clothing categories.
 """
 
 # Print a summary of each customer's total spending and classification
-print("\nCustomer Summary:")  
+print("Customer Summary:")  
 for customer in customers:
     total_spent = customer_spending[customer]
     classification = customer_classification[customer]
     print(f"- {customer}: ${total_spent}, {classification}")
 print("\n")
 
-# Find customers who purchased from multiple categories using sets
+# Find customers who purchased from multiple categories using set operations
 customer_order_categories = {}
 for order in orders:
     customer_name = order[0]
@@ -202,12 +202,12 @@ for order in orders:
 
     if customer_name not in customer_order_categories:
         customer_order_categories[customer_name] = set()
-    customer_order_categories[customer_name].add(category)
+    customer_order_categories[customer_name].add(category) # only adds unique categories
 
 # List customers who purchased from multiple categories
 print("Customers who purchased from multiple categories:")
 for customer, categories in customer_order_categories.items():
-    if len(categories) > 1:
+    if len(categories) > 1: # only selects customers who purchased from more than one category
         print(f"- {customer}: {', '.join(categories)}") 
 print("\n")
 

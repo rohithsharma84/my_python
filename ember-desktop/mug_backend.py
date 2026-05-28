@@ -127,9 +127,13 @@ class MugBackend(QThread):
 
                     unregister = self._mug.register_callback(self._on_data_change)
                     try:
+                        ticks = 0
                         while self._running:
                             await asyncio.sleep(1)
                             await self._mug.update_queued_attributes()
+                            ticks += 1
+                            if ticks % 30 == 0:
+                                await self._mug.update_all()
                     finally:
                         unregister()
 

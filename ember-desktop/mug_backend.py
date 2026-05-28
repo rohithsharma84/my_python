@@ -6,6 +6,7 @@ Signals are emitted cross-thread; PyQt6 queues them automatically.
 """
 import asyncio
 import logging
+import threading
 from typing import Optional
 
 from PyQt6.QtCore import QThread, pyqtSignal
@@ -32,6 +33,8 @@ class MugBackend(QThread):
         self._mug = None
         self._connect_task: Optional[asyncio.Task] = None
         self._running = False
+        self._pending: list = []
+        self._lock = threading.Lock()
 
     # ── Public interface (callable from Qt main thread) ──────────────────────
 
@@ -68,27 +71,32 @@ class MugBackend(QThread):
 
     def run(self):
         self._running = True
-        self._loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self._loop)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        with self._lock:
+            self._loop = loop
+            for coro in self._pending:
+                asyncio.run_coroutine_threadsafe(coro, loop)
+            self._pending.clear()
         try:
-            self._loop.run_forever()
+            loop.run_forever()
         finally:
-            # Cancel any pending tasks and close cleanly
-            pending = asyncio.all_tasks(self._loop)
+            pending = asyncio.all_tasks(loop)
             for task in pending:
                 task.cancel()
             if pending:
-                self._loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
-            self._loop.close()
+                loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+            loop.close()
 
     # ── Private helpers ───────────────────────────────────────────────────────
 
     def _schedule(self, coro):
         """Thread-safely schedule a coroutine on the backend loop."""
-        if self._loop and self._loop.is_running():
-            asyncio.run_coroutine_threadsafe(coro, self._loop)
-        else:
-            log.warning("Backend loop not running; ignoring schedule request.")
+        with self._lock:
+            if self._loop is not None:
+                asyncio.run_coroutine_threadsafe(coro, self._loop)
+            else:
+                self._pending.append(coro)
 
     async def _start_connect(self, address: Optional[str]):
         """Cancel any existing connection, then start a new connect loop."""

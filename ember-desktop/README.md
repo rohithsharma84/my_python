@@ -38,6 +38,8 @@ Once scanned, the address is saved and the app will connect automatically on fut
 
 The default view on launch. A dark-themed window showing all mug status and controls.
 
+<img width="489" height="675" alt="image" src="https://github.com/user-attachments/assets/7b4bcac9-7b2f-4c6e-b0fd-a0e4296e5e29" />
+
 ### Live Status
 
 | Field | Description |
@@ -73,6 +75,8 @@ The blue **Switch to Toolbar →** button at the bottom hides the full window an
 ## Toolbar Mode
 
 A compact, frameless floating bar that stays on top of all other windows. Intended for use while the mug is connected and you just want a glance at its status.
+
+<img width="546" height="42" alt="image" src="https://github.com/user-attachments/assets/892f1737-3e49-44fb-8e61-3b4076aaf6b2" />
 
 ### Display (left to right)
 

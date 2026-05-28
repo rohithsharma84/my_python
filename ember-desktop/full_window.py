@@ -136,7 +136,9 @@ class _StatusRow(QWidget):
 
     def set_value_widget(self, widget: QWidget):
         while self._value_layout.count():
-            self._value_layout.takeAt(0)
+            item = self._value_layout.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
         self._value_layout.addWidget(widget)
         self._value_layout.addStretch()
 
@@ -517,6 +519,10 @@ class FullWindow(QMainWindow):
         self._target_temp_c = new_c
         self._tgt_label.setText(_fmt_temp(new_c, unit))
         self._backend.set_target_temp(new_c)
+
+    def closeEvent(self, event):
+        from PyQt6.QtWidgets import QApplication
+        QApplication.quit()
 
     def _on_unit_changed(self, unit: str):
         # Enforce mutual exclusion between the two toggle buttons

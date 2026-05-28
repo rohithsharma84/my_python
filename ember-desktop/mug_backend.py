@@ -175,7 +175,13 @@ class MugBackend(QThread):
             try:
                 await self._mug.set_target_temp(temp_celsius)
             except Exception as exc:
-                self.error.emit(f"Could not set temperature: {exc!s}")
+                msg = str(exc)
+                if "Write Not Permitted" in msg or "not permitted" in msg.lower():
+                    self.error.emit(
+                        "Write blocked — pair the mug in Windows Bluetooth settings first, then reconnect."
+                    )
+                else:
+                    self.error.emit(f"Could not set temperature: {msg}")
 
     def _on_data_change(self, data):
         """Called by ember_mug on the asyncio thread; signals queue to Qt."""

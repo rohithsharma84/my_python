@@ -14,19 +14,26 @@ from time import sleep
 apple = Actor("apple.png")
 
 def draw():
-    global score, life, result_text
+    global score, life, result_text, speed
     screen.clear()
     if life >= 0:
         screen.draw.text(result_text, color="red", midtop=(400, 10))
         screen.draw.text("Life: " + str(life), color="red", topleft=(10,30))
         screen.draw.text("Score: " + str(score), color="red", topleft=(10,10))
+        screen.draw.text("Speed: " + str(speed), color="orange", topleft=(10,50))
         apple.draw()
     else: # Show "game over" at the center of the screen in large fonts
         screen.draw.text(result_text, color="red", fontsize=100, center=(400,300))
         screen.draw.text("Score: " + str(score), color="red", fontsize=80, center=(400,250))
 
+def increase_speed():
+    global speed
+    if speed < 16:
+        speed += 1
+        clock.schedule(increase_speed, 10)
+
 def update():
-    apple.left += 4
+    apple.left += speed
     if apple.left > 800:
         lose_life()
         place_apple()
@@ -78,8 +85,10 @@ WIDTH = 800
 HEIGHT = 600
 score = 0
 life = 3
+speed = 4
 result_text = "Shoot the apple!"
 set_apple_normal()
 place_apple()
+clock.schedule(increase_speed, 10)
 
 pgzrun.go()

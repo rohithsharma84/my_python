@@ -1,0 +1,167 @@
+================================================================================
+PROJECT REPORT: AI-Powered Document Assistant Using RAG Pipeline
+================================================================================
+
+
+--------------------------------------------------------------------------------
+1. INTRODUCTION
+--------------------------------------------------------------------------------
+
+Objective:
+The objective of this project is to build an AI-powered document assistant
+capable of retrieving meaningful insights from long PDF documents. The assistant
+allows users to ask natural language questions and receive accurate, context-
+grounded answers sourced directly from the uploaded documents.
+
+Relevance of RAG (Retrieval-Augmented Generation):
+Large Language Models (LLMs) such as GPT-4o are powerful but have two key
+limitations: they cannot access private or custom documents, and their knowledge
+is frozen at a training cutoff date. Retrieval-Augmented Generation (RAG)
+addresses both problems by combining a retrieval system with an LLM:
+
+  - The retrieval system searches a vector database of document chunks to find
+    the most semantically relevant passages for a given query.
+  - The LLM then uses those passages as context to generate a grounded,
+    accurate answer — rather than relying solely on parametric memory.
+
+This approach reduces hallucinations, enables document-specific Q&A, and makes
+LLMs practical for enterprise and educational use cases involving private data.
+
+
+--------------------------------------------------------------------------------
+2. IMPLEMENTATION OVERVIEW
+--------------------------------------------------------------------------------
+
+Pipeline Summary:
+The RAG pipeline was built end-to-end in Python using Visual Studio Code and
+consists of the following steps:
+
+  Step 1 — PDF Loading
+    Tool: PyPDFLoader (LangChain)
+    Three PDF documents were loaded from the working directory. PyPDFLoader
+    reads each page as a separate Document object, preserving page-level
+    metadata (source filename and page number).
+
+  Step 2 — Text Chunking
+    Tool: RecursiveCharacterTextSplitter (LangChain)
+    Each document was split into overlapping chunks of up to 500 characters,
+    with a 50-character overlap between consecutive chunks. The recursive
+    splitter tries multiple separators (paragraphs, lines, words) to ensure
+    chunks stay within the size limit without cutting mid-sentence.
+
+  Step 3 — Embedding Generation
+    Tool: OpenAIEmbeddings — text-embedding-ada-002
+    Each text chunk was converted into a 1536-dimensional dense vector using
+    OpenAI's text-embedding-ada-002 model. These vectors capture the semantic
+    meaning of the text, enabling similarity-based retrieval.
+
+  Step 4 — Vector Storage
+    Tool: FAISS (Facebook AI Similarity Search)
+    All chunk embeddings were stored in a FAISS IndexFlatL2 index. FAISS
+    enables fast nearest-neighbour search over large collections of vectors
+    using Euclidean (L2) distance, making retrieval efficient even at scale.
+
+  Step 5 — Retrieval and Answer Generation
+    Tool: RetrievalQA chain (LangChain) + GPT-4o-mini (OpenAI)
+    On each user query, the retriever fetches the top-k most relevant chunks
+    from FAISS. These chunks, along with the user's question, are passed to
+    GPT-4o-mini via a custom prompt that instructs the model to answer using
+    only the retrieved context. The response and the source documents are
+    displayed to the user.
+
+Tools and Dependencies:
+  - Python 3.x
+  - LangChain (langchain, langchain-openai, langchain-community, langchain-classic)
+  - FAISS (faiss-cpu)
+  - OpenAI API (embeddings + chat completion)
+  - PyPDF (PDF text extraction)
+
+PDF Documents Used:
+  1. 1762517560_course_end_project_problem_statement.pdf
+  2. ref-FAISS.pdf
+  3. ref-PyPDFLoader.pdf
+
+
+--------------------------------------------------------------------------------
+3. METRICS
+--------------------------------------------------------------------------------
+
+Chunking Statistics:
+  Total chunks produced:      51
+  Average chunk size:         353 chars
+  Chunk size setting:         500 characters
+  Chunk overlap setting:      50 characters
+  Splitter used:              RecursiveCharacterTextSplitter
+
+Sample Query and Output:
+Query: Should I use FAISS and is that part of the requirements?
+
+Answer:
+Yes — FAISS is explicitly listed among the required tools (Visual Studio Code, 
+Python, FAISS, LangChain, and OpenAI API), so you should use it for the project.
+Install it using the recommended conda packages (conda install -c pytorch 
+faiss-cpu or conda install -c pytorch faiss-gpu) and do not install both.
+
+Source Documents:
+
+Source 1 [data/ref-FAISS.pdf, page 0]:-
+Faiss
+
+
+Faiss is a library for eﬃcient similarity (truncated)
+
+Source 2 [data/1762517560_course_end_project_problem_statement.pdf, page 0]:-
+Instructions
+
+    •   Tools: Use Visual Studio Cod(truncated)
+
+Source 3 [data/ref-FAISS.pdf, page 1]:-
+Install
+
+
+The recommended way to install Faiss is (truncated)
+
+Source 4 [data/ref-FAISS.pdf, page 3]:-
+Image credit: Yusuke Matsui, thanks for allowing u(truncated)
+
+--------------------------------------------------------------------------------
+4. CONCLUSION
+--------------------------------------------------------------------------------
+
+Insights Gained:
+  - RAG is highly effective at grounding LLM responses in specific documents,
+    significantly reducing hallucinations compared to prompting the model with
+    no context.
+  - Chunk size and overlap have a direct impact on retrieval quality. Smaller
+    chunks improve precision but may lose surrounding context; larger chunks
+    retain context but may dilute relevance scores.
+  - RecursiveCharacterTextSplitter produces more natural splits than
+    CharacterTextSplitter, which can produce oversized chunks when the chosen
+    separator does not appear in the text.
+  - FAISS provides fast, scalable similarity search with minimal setup, making
+    it well-suited for local, in-memory vector storage during development.
+
+Issues Faced:
+  - Some PDFs stored text as vector graphic paths rather than actual text
+    objects (a common artifact of browser-based PDF export). Standard
+    extractors including PyPDFLoader and PyMuPDFLoader returned empty content
+    for these files, requiring the documents to be re-exported correctly.
+  - The default CharacterTextSplitter produced chunks exceeding the configured
+    size limit when the text contained no double-newline separators. Switching
+    to RecursiveCharacterTextSplitter resolved this.
+
+Possible Improvements:
+  - Add OCR support (e.g., pytesseract) to handle scanned or image-based PDFs.
+  - Load the OpenAI API key from a .env file using python-dotenv instead of
+    hardcoding it, to follow security best practices.
+  - Persist the FAISS index to disk so embeddings do not need to be regenerated
+    on every run (FAISS supports save_local / load_local).
+  - Experiment with different chunk sizes and embedding models to optimise
+    retrieval accuracy for the specific document types in use.
+  - Add a reranking step (e.g., Cohere Rerank) after FAISS retrieval to further
+    improve the relevance of chunks passed to the LLM.
+
+
+================================================================================
+END OF REPORT
+================================================================================

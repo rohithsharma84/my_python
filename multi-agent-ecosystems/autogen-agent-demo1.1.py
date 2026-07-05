@@ -14,7 +14,7 @@ load_dotenv()
 async def main():
     # Create an OpenAI chat client
     model_client = OpenAIChatCompletionClient(
-        model="gpt-5-mini",
+        model=os.getenv("OPENAI_MODEL_NAME"),
         api_key=os.getenv("OPENAI_API_KEY"),
     )
 

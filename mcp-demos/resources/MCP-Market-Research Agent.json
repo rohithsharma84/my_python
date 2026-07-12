@@ -36,10 +36,10 @@
     },
     {
       "parameters": {
-        "toolDescription": "MARKET RESEARCH AGENT:Collect fresh competitor & market data from news sites, social channels, review portals, and product pages; return a clean content with source-URLs and metadata. you have MCP tool use it for research",
-        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', `return a clean content with source-URLs and metadata. tell it to use MCP tool to do research`, 'string') }}",
+        "toolDescription": "MARKET RESEARCH AGENT: Collect fresh competitor and market data from news sites, social channels, review portals, and product pages. Return structured findings with source URLs and metadata.",
+        "text": "Use the MarketIntel MCP research tool to collect fresh market intelligence, include source URLs, and return structured results with citations.",
         "options": {
-          "systemMessage": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('System_Message', ``, 'string') }}"
+          "systemMessage": "You are a market research assistant. Use the MCP tool for research and include source URLs in the result."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agentTool",
@@ -53,10 +53,10 @@
     },
     {
       "parameters": {
-        "toolDescription": "Analyse Agent: Cluster, tag sentiment & score opportunity/risk across the research corpus using RAG over a vector database; emit structured “insights” with rationales.",
-        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "toolDescription": "Analyse Agent: Cluster, tag sentiment, and score opportunity/risk across the research corpus; emit structured insights with rationales.",
+        "text": "Analyze the research content and return concise structured insights, grouped by theme and risk/opportunity.",
         "options": {
-          "systemMessage": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('System_Message', ``, 'string') }}"
+          "systemMessage": "You are a research analyst. Produce structured insights with rationale from the research data."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agentTool",
@@ -70,10 +70,10 @@
     },
     {
       "parameters": {
-        "toolDescription": "Strategise: makes a GTM ",
-        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "toolDescription": "Strategise: Generate a go-to-market strategy from analysis insights.",
+        "text": "Create a concise go-to-market plan using the research and analysis outcomes.",
         "options": {
-          "systemMessage": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('System_Message', ``, 'string') }}"
+          "systemMessage": "You are a strategy assistant. Use insights to build a GTM plan with clear next steps."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agentTool",
@@ -101,7 +101,7 @@
     {
       "parameters": {
         "folderId": "1FuKHlF9PGMNObE8dw01UxDmkeBZ7eFVm",
-        "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', ``, 'string') }}"
+        "title": "Market Research Report"
       },
       "type": "n8n-nodes-base.googleDocsTool",
       "typeVersion": 2,
@@ -121,12 +121,12 @@
     {
       "parameters": {
         "operation": "update",
-        "documentURL": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Doc_ID_or_URL', ``, 'string') }}",
+        "documentURL": "https://docs.google.com/document/d/REPLACE_WITH_DOC_URL",
         "actionsUi": {
           "actionFields": [
             {
               "action": "insert",
-              "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('actionFields0_Text', ``, 'string') }}"
+              "text": "Insert the generated market research report content here."
             }
           ]
         }
@@ -242,10 +242,10 @@
     {
       "parameters": {
         "options": {
-          "gl": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Country', ``, 'string') }}",
+          "gl": "us",
           "device": "desktop",
-          "no_cache": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Explicit_Array', ``, 'boolean') }}",
-          "google_domain": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Google_Domain', ``, 'string') }}"
+          "no_cache": false,
+          "google_domain": "google.com"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.toolSerpApi",

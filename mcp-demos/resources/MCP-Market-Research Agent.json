@@ -1,0 +1,493 @@
+{
+  "name": "MCP-Market-Research Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "allowFileUploads": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4ecc1c0d-b808-4c51-8d86-f1dd4a97db2b",
+      "name": "When chat message received",
+      "webhookId": "fc5e60f3-a352-41ea-a7ac-62d555daf6fd"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a report creator, in your team you have several agents for your help and tools as well\n\nrules must follow:\n1.Include URL and links for the research agent and cite them in right place if not already \n\ntask: \n\n1. understant the topic of research \n2. use research agent tool to get the research and supporting links on that.\n3. pass the content to analysis agent to analyse \n4. make a GTM using strategy agent tool \n5. curate everything including URLs form web search and links to support the facts into a report format and write it to a google doc using doc tools \n6. output link to the doc no extra words just the link\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        752,
+        0
+      ],
+      "id": "1297ccc7-c72f-451c-9da5-50aaec6be34a",
+      "name": "AI Agent1",
+      "retryOnFail": true,
+      "maxTries": 5
+    },
+    {
+      "parameters": {
+        "toolDescription": "MARKET RESEARCH AGENT:Collect fresh competitor & market data from news sites, social channels, review portals, and product pages; return a clean content with source-URLs and metadata. you have MCP tool use it for research",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', `return a clean content with source-URLs and metadata. tell it to use MCP tool to do research`, 'string') }}",
+        "options": {
+          "systemMessage": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('System_Message', ``, 'string') }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        400,
+        224
+      ],
+      "id": "419b3785-386e-4418-a8c9-5d94c4675621",
+      "name": "Research"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Analyse Agent: Cluster, tag sentiment & score opportunity/risk across the research corpus using RAG over a vector database; emit structured “insights” with rationales.",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('System_Message', ``, 'string') }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        224
+      ],
+      "id": "f09be4f8-11c7-4d77-bcdf-ad7338958991",
+      "name": "Analyse"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Strategise: makes a GTM ",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('System_Message', ``, 'string') }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        1040,
+        224
+      ],
+      "id": "68805478-358d-464d-9f22-24b82249fc63",
+      "name": "Strategise"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1056,
+        720
+      ],
+      "id": "a470fb5f-7a0a-4816-8ff3-9595ab51d14a",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "folderId": "1FuKHlF9PGMNObE8dw01UxDmkeBZ7eFVm",
+        "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.googleDocsTool",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        224
+      ],
+      "id": "68888545-b02e-4f6f-b255-01c020a8a62a",
+      "name": "Create a document in Google Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "WwPnzCudkEJ4olqt",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Doc_ID_or_URL', ``, 'string') }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('actionFields0_Text', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocsTool",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        224
+      ],
+      "id": "823740d4-f998-4dab-8d4a-28398242a4d1",
+      "name": "Update a document in Google Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "WwPnzCudkEJ4olqt",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "Rishabh.hota@simplilearn.net",
+        "subject": "requested research analysis ",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2080,
+        0
+      ],
+      "id": "c6869d9d-935e-448c-a3f7-5d4fc725e678",
+      "name": "Send a message",
+      "webhookId": "3bf5941f-4902-4bc6-857f-035740816fea",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZOPMmPf1secKzeuu",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://127.0.0.1:8000/sse"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        528
+      ],
+      "id": "1dbbb563-fc65-4882-9c97-cf1b2c5a2196",
+      "name": "MCP Client"
+    },
+    {
+      "parameters": {
+        "path": "2e55eddf-7d62-4207-aea3-43d3c5b3665b"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        2048,
+        464
+      ],
+      "id": "bc0a11e7-b56d-4f7f-8cc4-c6443690e3fa",
+      "name": "MCP Server Trigger",
+      "webhookId": "2e55eddf-7d62-4207-aea3-43d3c5b3665b"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        896,
+        720
+      ],
+      "id": "20a03725-2578-46d1-a5d7-08139c27fc1e",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "krSGew62scjj6uku",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        272,
+        432
+      ],
+      "id": "e03e8e2b-cddd-4f99-bfca-4a977941df96",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "WCzl1rL7gU36qXOk",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "gl": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Country', ``, 'string') }}",
+          "device": "desktop",
+          "no_cache": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Explicit_Array', ``, 'boolean') }}",
+          "google_domain": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Google_Domain', ``, 'string') }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        2368,
+        896
+      ],
+      "id": "dab031f3-de5a-4ea0-a047-8e3bd1312611",
+      "name": "SerpAPI1",
+      "retryOnFail": true,
+      "credentials": {
+        "serpApi": {
+          "id": "3SDwjsNUjujHZPsf",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        2192,
+        672
+      ],
+      "id": "57cfb961-67d8-40ea-92c2-c71e98faba76",
+      "name": "AI Agent Tool"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2192,
+        800
+      ],
+      "id": "30674218-8431-40fa-81b2-12090099a128",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "WCzl1rL7gU36qXOk",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyse": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Strategise": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Analyse",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Strategise",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document in Google Docs": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document in Google Docs": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Strategise",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Analyse",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Research",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "aa4b4d35-0f39-4584-ae13-25bddbe379d6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6f8c3ad2408078f9f201bf02cbaced4d7cb1756c3c977edd3e83a6e48e140463"
+  },
+  "id": "VqnIyaJ0QlzmQryU",
+  "tags": []
+}

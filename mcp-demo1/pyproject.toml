@@ -1,0 +1,10 @@
+[project]
+name = "mcp-demo1"
+version = "0.1.0"
+description = "MarketScout - a custom MCP server demo for GitHub Copilot CLI"
+requires-python = ">=3.10"
+dependencies = [
+    "fastmcp>=2.10",
+    "tavily-python>=0.5",
+    "python-dotenv>=1.0",
+]

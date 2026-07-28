@@ -1,0 +1,11 @@
+.venv/
+.env
+__pycache__/
+*.pyc
+
+# Per-run artifacts and the rebuildable vector index
+runs/
+memory/index/
+
+# Write-back memory is run output, not source
+memory/corpus/past_briefs/*.md

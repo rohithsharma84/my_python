@@ -1,0 +1,17 @@
+[project]
+name = "startup-accelerator"
+version = "0.1.0"
+description = "A LangGraph multi-agent workflow planner that turns a startup domain into a founder-ready pitch deck outline"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "langgraph>=1.0",
+    "langchain>=1.0",
+    "langchain-openai>=1.0",
+    "langchain-tavily>=0.2",
+    "langsmith>=0.4",
+    "faiss-cpu>=1.14.3",
+    "streamlit>=1.60.0",
+    "python-dotenv>=1.0",
+    "pydantic>=2.10",
+]
